@@ -17,7 +17,6 @@ extern crate chrono;
 #[macro_use]
 extern crate log;
 extern crate regex;
-extern crate reqwest;
 extern crate serde;
 extern crate serde_yaml;
 

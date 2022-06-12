@@ -49,6 +49,7 @@ impl From<String> for FileMatcher {
     }
 }
 
+#[cfg(feature = "spdx-templates")]
 #[derive(Deserialize)]
 struct SPDXLicenseInfo {
     #[serde(alias = "licenseText")]
@@ -76,6 +77,7 @@ impl Config {
         self.files.is_match(s)
     }
 
+    #[cfg(feature = "spdx-templates")]
     async fn fetch_template(&self) -> String {
         let r = match reqwest::get(&format!("https://spdx.org/licenses/{}.json", &self.ident)).await {
             Ok(r) => r,
@@ -116,6 +118,12 @@ impl Config {
             Some(header) => header,
             None => json.license_text,
         }
+    }
+
+    #[cfg(not(feature = "spdx-templates"))]
+    async fn fetch_template(&self) -> String {
+        eprintln!("Licensure is not compiled with 'spdx-templates' feature, so it cannot fetch SPDX license templates");
+        process::exit(1);
     }
 
     pub async fn get_template(&self) -> Template {
