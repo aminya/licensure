@@ -21,7 +21,6 @@ extern crate regex;
 extern crate reqwest;
 extern crate serde;
 extern crate serde_yaml;
-extern crate textwrap;
 
 mod comments;
 mod config;
