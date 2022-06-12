@@ -14,7 +14,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 extern crate chrono;
-extern crate clap;
 #[macro_use]
 extern crate log;
 extern crate regex;
@@ -33,8 +32,8 @@ use std::io::ErrorKind;
 use std::process;
 use std::process::Command;
 
-use clap::{App, Arg};
 use chrono::offset::{Offset, Utc};
+use clap::Arg;
 
 use config::DEFAULT_CONFIG;
 use futures::executor::block_on;
@@ -63,7 +62,7 @@ fn get_project_files() -> Vec<String> {
 }
 
 fn main() {
-    let matches = App::new("licensure")
+    let matches = clap::Command::new("licensure")
         .version(VERSION)
         .author("Mathew Robinson <chasinglogic@gmail.com>")
         .about(
@@ -80,36 +79,36 @@ More information is available at: {}",
             .as_str(),
         )
         .arg(
-            Arg::with_name("verbose")
-                .short("v")
+            Arg::new("verbose")
+                .short('v')
                 .long("verbose")
-                .multiple(true),
+                .multiple_occurrences(true),
         )
-        .arg(Arg::with_name("in-place").short("i").long("in-place"))
+        .arg(Arg::new("in-place").short('i').long("in-place"))
         .arg(
-            Arg::with_name("check")
+            Arg::new("check")
                 .long("check")
                 .help("Checks if any file is not licensed with the given config"),
         )
         .arg(
-            Arg::with_name("exclude")
-                .short("e")
+            Arg::new("exclude")
+                .short('e')
                 .long("exclude")
                 .takes_value(true)
                 .value_name("REGEX")
                 .help("A regex which will be used to determine what files to ignore."),
         )
-        .arg(Arg::with_name("project").long("project").short("p").help(
+        .arg(Arg::new("project").long("project").short('p').help(
             "When specified will license the current project files as returned by git ls-files",
         ))
         .arg(
-            Arg::with_name("generate-config")
+            Arg::new("generate-config")
                 .long("generate-config")
                 .help("Generate a default licensure config file"),
         )
         .arg(
-            Arg::with_name("FILES")
-                .multiple(true)
+            Arg::new("FILES")
+                .multiple_occurrences(true)
                 .help("Files to license, ignored if --project is supplied"),
         )
         .get_matches();
